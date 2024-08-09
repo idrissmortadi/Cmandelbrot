@@ -9,8 +9,8 @@
 
 #define IMAGE_W 4096
 #define IMAGE_H 4096
-#define SCALE 4.0
-#define MAX_ITER 100
+#define SCALE 4
+#define MAX_ITER 200
 
 typedef struct {
   double x;
@@ -32,7 +32,7 @@ void get_color(int n, uint8_t *r, uint8_t *g, uint8_t *b) {
 }
 
 Complex pixels_to_complex(int i, int j) {
-  Complex z = {SCALE * ((double)j / IMAGE_W - 0.5),
+  Complex z = {SCALE * ((double)j / IMAGE_W - 0.5) * IMAGE_W / IMAGE_H,
                SCALE * ((double)i / IMAGE_H - 0.5)};
   return z;
 }
@@ -83,6 +83,8 @@ int main() {
 
   // Free the allocated memory
   free(img);
+
+  system("xdg-open ./mandelbrot.png");
 
   return EXIT_SUCCESS;
 }
