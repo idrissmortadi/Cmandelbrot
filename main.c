@@ -17,6 +17,20 @@ typedef struct {
   double y;
 } Complex;
 
+// Function to convert iteration count to a color
+void get_color(int n, uint8_t *r, uint8_t *g, uint8_t *b) {
+  if (n == MAX_ITER) {
+    // Color for points inside the Mandelbrot set (black)
+    *r = *g = *b = 0;
+  } else {
+    // Map iteration count to a color gradient
+    double t = (double)n / MAX_ITER;
+    *r = (uint8_t)(9 * (1 - t) * t * t * t * 255);
+    *g = (uint8_t)(15 * (1 - t) * (1 - t) * t * t * 255);
+    *b = (uint8_t)(8.5 * (1 - t) * (1 - t) * (1 - t) * t * 255);
+  }
+}
+
 Complex pixels_to_complex(int i, int j) {
   Complex z = {SCALE * ((double)j / IMAGE_W - 0.5),
                SCALE * ((double)i / IMAGE_H - 0.5)};
@@ -54,11 +68,13 @@ int main() {
         n++;
       }
 
-      // Map the number of iterations to a color (grayscale)
-      uint8_t color = (uint8_t)(255 * n / MAX_ITER);
-      img[(i * IMAGE_W + j) * 3 + 0] = color; // Red
-      img[(i * IMAGE_W + j) * 3 + 1] = color; // Green
-      img[(i * IMAGE_W + j) * 3 + 2] = color; // Blue
+      // Get the color based on the number of iterations
+      uint8_t r, g, b;
+      get_color(n, &r, &g, &b);
+
+      img[(i * IMAGE_W + j) * 3 + 0] = r; // Red
+      img[(i * IMAGE_W + j) * 3 + 1] = g; // Green
+      img[(i * IMAGE_W + j) * 3 + 2] = b; // Blue
     }
   }
 
